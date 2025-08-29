@@ -7,6 +7,8 @@ public class MenuLateralPanel {
     private JPanel panelMenu;
 
     public MenuLateralPanel() {
+
+       
         panelMenu = new JPanel();
         panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS)); // <- apila vertical
         panelMenu.setPreferredSize(new Dimension(300, 800)); // ancho fijo de menú

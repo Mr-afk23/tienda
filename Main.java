@@ -1,28 +1,45 @@
-import javax.swing.*;
-import java.awt.*;
-import paneles.*;
+import control.TiendaFecher;
+import ventanas.Dashboard;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame ventana = new JFrame("Tienda Fake");
-        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventana.setSize(1000, 800);
-        ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // inicia maximizada
-        ventana.setLayout(new BorderLayout());
-        ventana.setLocationRelativeTo(null);
+        try {
 
-        // ---- Panel lateral (menú) ----
-        MenuLateralPanel menuLateral = new MenuLateralPanel();
-        JPanel panelIzquierdo = new JPanel(new BorderLayout());
-        panelIzquierdo.setBackground(new Color(154, 199, 188));
-        panelIzquierdo.setPreferredSize(new Dimension(300, 800)); 
-        panelIzquierdo.add(menuLateral.getJPanel(), BorderLayout.NORTH);
-        ventana.add(panelIzquierdo, BorderLayout.WEST);
+            //Consulta
+            String urlApi = "https://jsonplaceholder.typicode.com/posts";
+            String respuesta = TiendaFecher.obtenerProductos(urlApi);
 
-        // ---- Panel central (productos) ----
-        ProductoPanel productos = new ProductoPanel();
-        ventana.add(productos.getJPanel(), BorderLayout.CENTER);
+            // Variables para capturar el primer objeto
+            String objeto = "";
+            boolean dentroObjeto = false;
+            int llaves = 0;
 
-        ventana.setVisible(true);
+            for (int i = 0; i < respuesta.length(); i++) {
+                char c = respuesta.charAt(i);
+
+                if (c == '{') {
+                    dentroObjeto = true;
+                    llaves++;
+                }
+
+                if (dentroObjeto) {
+                    objeto += c;
+                }
+
+                if (c == '}') {
+                    llaves--;
+                    if (llaves == 0) {
+                        // Terminó el primer objeto
+                        break;
+                    }
+                }
+            }
+
+            // Mostrar el primer objeto tal cual
+            System.out.println(objeto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
